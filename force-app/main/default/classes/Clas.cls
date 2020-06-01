@@ -1,7 +1,10 @@
 public class Clas{
-	
-    public class ClassWrap{
-        private String name;
-   		private String id;
-    }
+    private String name;
+    private String id;
+
+    public String Name (String nm){
+        this.name = nm;
+    } 
+
+
 }
