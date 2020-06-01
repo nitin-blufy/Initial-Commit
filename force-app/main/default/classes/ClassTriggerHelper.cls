@@ -10,7 +10,6 @@ Desc:- Creating Class term or sessions based on class type, frequency and status
 Create Class Term when class is update to Open status which having Type as fixed and Frequency as One-time.
 Insert Class Term from Term object when class is update to Open status which having Type as Ongoing and Frequency as Term.
 Create Sessions when class is update to Open status which having Frequency as Monthly and Advance scheduling unit as Month(s). 
-Nitin
 */
 public class ClassTriggerHelper {
     //-------   Create a Term when A cLass status is updated from draft to open (Mar 23,2020)   -------//

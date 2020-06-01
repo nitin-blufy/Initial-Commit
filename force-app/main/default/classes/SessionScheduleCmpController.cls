@@ -17,15 +17,21 @@ public class SessionScheduleCmpController {
     @auraEnabled
     // generating sessions through sessionWrapper on Class_Term__c by fetching Class__c and Teacher fields 
     public static List<sessionWrapper> generateSession(String clsTermId){
-        fieldsApiName = new Set<String>{'Id', 'Name', 'Class__c', 'Teacher__c', 'Start_Time__c', 'End_Time__c', 'Days_of_Week__c','Location__c','Duration__c','Duration_Unit__c'};
+        fieldsApiName = new Set<String>{'Id', 'Name', 'Course__c','Teacher__c', 'Start_Time__c', 'End_Time__c', 'Days_of_Week__c','Location__c',
+            'Duration__c','Duration_Unit__c','Starting_Module__c'};
             isClassAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Class__c',fieldsApiName,false);    
         Boolean isClsTermAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Class_Term__c',  new Set<String>{'Id', 'Name', 'Class__c', 'Start_Date__c', 'Sessions__c', 'Status__c', 'Skip__c'}, false);
         Boolean isHolidayAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Holiday__c', new Set<String>{'Id','Start_Date__c','End_Date__c'}, false);
         Boolean isTchrLeaveyAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Teacher_Leave__c', new Set<String>{'Id', 'Name', 'Status__c', 'Start_Date__c', 'End_Date__c','Teacher__c'}, false);
         Boolean isTchrWrkHressible = FieldPremissionCrudUtility.checkReadPermission('educato__Teacher_Working_Hours__c', new Set<String>{'Id','Day__c','End_Time__c','Start_Time__c','Active__c','Teacher__c'}, false);
+        Boolean isCourseModuleAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Course_Module__c', new Set<String>{'Id','Name',
+            'Module__c','Duration__c','Sequence__c','Course__c'}, false);
+        Boolean isModuleAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Module__c', new Set<String>{'Id','Name'}, false);
+        Boolean isModuleLessonAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Module_Lesson__c', new Set<String>{'Id','Name',
+            'Duration__c','Module__c','Lesson_Name__c','Lesson__c','Sequence__c'}, false);
         
         List<sessionWrapper> sessList  = new List<sessionWrapper>();
-        if(isClsTermAccessible && isHolidayAccessible && isTchrLeaveyAccessible && isTchrWrkHressible){
+        if(isClsTermAccessible && isHolidayAccessible && isTchrLeaveyAccessible && isTchrWrkHressible && isCourseModuleAccessible && isModuleAccessible && isModuleLessonAccessible){
             List<Class_Term__c> clsTermList = [SELECT Id, Name, Class__c, Class__r.Name, Class__r.Teacher__c, Class__r.Teacher__r.Name, Start_Date__c,End_Date__c, 
                                                Class__r.Start_Time__c, Class__r.End_Time__c, Class__r.Days_of_Week__c, Sessions__c, Class__r.Duration__c,
                                                Class__r.Duration_Unit__c, Exclude_Public_Holidays__c, Class__r.Location__c,

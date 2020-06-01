@@ -4,8 +4,4 @@ public class Clas{
         private String name;
    		private String id;
     }
-
-    public String Name (String s){
-        this.string = s;
-    } 
 }
