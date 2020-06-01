@@ -1,10 +1,8 @@
 public class Clas{
-    private String name;
-    private String id;
-
-    public String Name (String nm){
-        this.name = nm;
-    } 
-
-
+    public String name;
+    public String id;	
+    public String ClassName {
+        get {return name;}
+        set{this.name = value;}
+    }
 }
