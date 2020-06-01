@@ -1,6 +1,6 @@
 public class Clas{
-    public String name;
-    public String id;	
+    private String name;
+    private String id;	
     public String ClassName {
         get {return name;}
         set{this.name = value;}
