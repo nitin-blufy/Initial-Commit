@@ -5,4 +5,8 @@ public class Clas{
         get{return name;}
         set{this.name = value;}
     }
+    public String Id{
+        get{return this.id;}
+        set{this.id = value;}
+    }
 }
