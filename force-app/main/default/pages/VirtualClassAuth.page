@@ -1,0 +1,23 @@
+<apex:page standardController="Account" extensions="VirtualClassAuthController">
+    <apex:slds />
+    
+    <apex:form >
+         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+             console.log('{!$CurrentPage.parameters.code}');
+             console.log('{!$CurrentPage.parameters.state}');
+             let code = '{!$CurrentPage.parameters.code}';
+             let state = '{!$CurrentPage.parameters.state}';
+             if(code && state){
+                getAccessTokenJS();
+             }
+         });
+        </script>
+        {!locationId}
+        <apex:actionFunction action="{!getAccessToken}" name="getAccessTokenJS" reRender="btn" >           
+        </apex:actionFunction>
+        <apex:outputPanel id="btn"></apex:outputPanel>
+    <apex:commandbutton styleClass="slds-button slds-button_brand" onclick="this.value = 'Authenticating....'" action="{!initAuth}" value="{!config.Virtual_Platform__c} Authentication">
+    </apex:commandbutton>
+    </apex:form>
+</apex:page>

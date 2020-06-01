@@ -1,0 +1,55 @@
+<apex:page controller="ZoomIntegrationController" standardStylesheets="false" lightningStylesheets="true">
+ <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <apex:form >
+       
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+             console.log('{!$CurrentPage.parameters.code}');
+             console.log('{!$CurrentPage.parameters.state}');
+             let code = '{!$CurrentPage.parameters.code}';
+             let state = '{!$CurrentPage.parameters.state}';
+             if(code && state){
+                getAccessTokenJS();
+             }
+         });
+        function updateRecords(){
+            var meetingId = '96142441721';
+            var weblink = 'https://api.zoom.us/v2/meetings/'+meetingId;
+            var accessTokn = 'eyJhbGciOiJIUzUxMiIsInYiOiIyLjAiLCJraWQiOiI0ODc5MmM0NC0yNTk5LTQwZTUtODc3Yi00MTk5NTYzNzI1YTEifQ.eyJ2ZXIiOiI2IiwiY2xpZW50SWQiOiJlX0ZHSVd1eFE1MmpiQk9UNkwxbl93IiwiY29kZSI6IlN1R09MWFkxc09fcWFFdWJmclVUcWFuOWdYTmNtV2s1USIsImlzcyI6InVybjp6b29tOmNvbm5lY3Q6Y2xpZW50aWQ6ZV9GR0lXdXhRNTJqYkJPVDZMMW5fdyIsImF1dGhlbnRpY2F0aW9uSWQiOiIyNzc5NGY2YTU5ZThhYjVjZDBiZTJmMzhlM2JhY2ZhZSIsInVzZXJJZCI6InFhRXViZnJVVHFhbjlnWE5jbVdrNVEiLCJncm91cE51bWJlciI6MCwiYXVkIjoiaHR0cHM6Ly9vYXV0aC56b29tLnVzIiwiYWNjb3VudElkIjoiTG1aazZGTzRTcjZKRjhqSDA0Z3hoZyIsIm5iZiI6MTU4ODMxMTkxOCwiZXhwIjoxNTg4MzE1NTE4LCJ0b2tlblR5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE1ODgzMTE5MTgsImp0aSI6IjRjMjcyODUwLWJjNzItNDY5YS04ZmYxLTMxNjdhZmRjNmU4MCIsInRvbGVyYW5jZUlkIjowfQ.aiPmSybdcVsQKyG-ScbZX0UPYaIK2svmsfjowwOyeFdsjP1p9gzRVrWLFu6uQ206_p87KV6XISE0v8Q73Tam4g';
+            $.ajax(
+                {
+                    url : weblink,
+                    type : 'PATCH',
+                    dataType: 'json',
+                    beforeSend: function (request)
+                    {
+                        request.setRequestHeader("Authorization", "Bearer "+accessTokn);
+                    },
+                    crossDomain: true,
+                    success : function(result)
+                    {
+                        console.log(result);
+                    },
+                    error : function(jqXHR, textStatus, errorThrown) {
+                        alert('Error: '+jqXHR.status);
+                        alert('ErrorThrown: '+errorThrown)
+                    } 
+                }); 
+    
+        }
+        </script>
+        
+        <apex:slds />
+        <apex:includeLightning />
+            {!locationId}    
+        <apex:actionFunction action="{!getAccessToken}" name="getAccessTokenJS" reRender="btn" >           
+        </apex:actionFunction>
+        <apex:outputPanel id="btn">
+            <apex:commandbutton styleClass="slds-button slds-button_brand" onclick="this.value = 'Authenticating....'" action="{!zoomAuth}" value="Zoom Authentication">
+            </apex:commandbutton>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
