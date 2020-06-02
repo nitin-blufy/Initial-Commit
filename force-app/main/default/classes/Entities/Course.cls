@@ -2,80 +2,80 @@ public class Course {
     public Course() {
 
     }
-    private String _name;
-    private String _id;	
-    private String _code;
-    private String _type;
-    private String _level;
-    private String _format;
-    private String _category;
-    private String _status;
-    private String _description;
-    private String _requirements;
-    private String _conditions;
-    private Decimal _duration;
-    private Decimal _sequence;
-    private Decimal _classcount;
+    private String cr_name;
+    private String cr_id;	
+    private String cr_code;
+    private String cr_type;
+    private String cr_level;
+    private String cr_format;
+    private String cr_category;
+    private String cr_status;
+    private String cr_description;
+    private String cr_requirements;
+    private String cr_conditions;
+    private Decimal cr_duration;
+    private Decimal cr_sequence;
+    private Decimal cr_classcount;
 
     public String Name {
-        get{return this._name;}
-        set{this._name = value;}
+        get{return this.cr_name;}
+        set{this.cr_name = value;}
     }
     public String Id {
-        get{return this._id;}
-        set{this._id = value;}
+        get{return this.cr_id;}
+        set{this.cr_id = value;}
     }
     public String Code {
-        get{return this._code;}
-        set{this._code = value;}
+        get{return this.cr_code;}
+        set{this.cr_code = value;}
     }
     public String Type {
-        get{return this._type;}
-        set{this._type = value;}
+        get{return this.cr_type;}
+        set{this.cr_type = value;}
     }
     public String Level {
-        get{return this._level;}
-        set{this._level = value;}
+        get{return this.cr_level;}
+        set{this.cr_level = value;}
     }
     public String Format {
-        get{return this._format;}
-        set{this._format = value;}
+        get{return this.cr_format;}
+        set{this.cr_format = value;}
     }
     public String Category {
-        get{return this._category;}
-        set{this._category = value;}
+        get{return this.cr_category;}
+        set{this.cr_category = value;}
     }
     public String Status {
-        get{return this._status;}
-        set{this._status = value;}
+        get{return this.cr_status;}
+        set{this.cr_status = value;}
     }
     public String Description {
-        get{return this._description;}
-        set{this._description = value;}
+        get{return this.cr_description;}
+        set{this.cr_description = value;}
     }
     public String Requirements {
-        get{return this._requirements;}
-        set{this._requirements = value;}
+        get{return this.cr_requirements;}
+        set{this.cr_requirements = value;}
     }
     public String Conditions {
-        get{return this._conditions;}
-        set{this._conditions = value;}
+        get{return this.cr_conditions;}
+        set{this.cr_conditions = value;}
     }
     public Decimal Duration {
-        get{return this._duration;}
-        set{this._duration = value;}
+        get{return this.cr_duration;}
+        set{this.cr_duration = value;}
     }
     public Decimal Sequence {
-        get{return this._sequence;}
-        set{this._sequence = value;}
+        get{return this.cr_sequence;}
+        set{this.cr_sequence = value;}
     }
     public Decimal ClassCount {
-        get{return this._classcount;}
-        set{this._classcount = value;}
+        get{return this.cr_classcount;}
+        set{this.cr_classcount = value;}
     }
 
-    public List<Course> getActiveCourses(String id){
+    public List<Course> getActiveCourses(){
         CourseData crsData = new CourseData();
-        return crsData.getActiveCourses(id);
+        return crsData.getActiveCourses();
     }
 }
