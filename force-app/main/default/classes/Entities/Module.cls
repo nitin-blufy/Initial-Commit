@@ -1,3 +1,5 @@
-public class Module{
-    
+public class Module extends Entity{
+    public Module(){
+
+    }
 }

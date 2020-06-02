@@ -1,3 +1,5 @@
-public class Fee{
-    
+public class Fee extends Entity{
+    public Fee(){
+
+    }
 }

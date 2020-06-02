@@ -1,9 +1,4 @@
-public class Course {
-    public Course() {
-
-    }
-    private String cr_name;
-    private String cr_id;	
+public class Course  extends Entity{
     private String cr_code;
     private String cr_type;
     private String cr_level;
@@ -18,14 +13,16 @@ public class Course {
     private Decimal cr_classcount;
     private List<Fee> cr_fees;
     private List<Module> cr_modules;
+    public Course() {
 
-    public String Name {
-        get{return this.cr_name;}
-        set{this.cr_name = value;}
     }
     public String Id {
-        get{return this.cr_id;}
-        set{this.cr_id = value;}
+        get{return super.en_id;}
+        set{super.en_id = value;}
+    }
+    public String Name {
+        get{return super.en_name;}
+        set{super.en_name = value;}
     }
     public String Code {
         get{return this.cr_code;}
