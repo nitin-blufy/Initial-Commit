@@ -16,6 +16,8 @@ public class Course {
     private Decimal cr_duration;
     private Decimal cr_sequence;
     private Decimal cr_classcount;
+    private List<Fee> cr_fees;
+    private List<Module> cr_modules;
 
     public String Name {
         get{return this.cr_name;}
@@ -73,6 +75,15 @@ public class Course {
         get{return this.cr_classcount;}
         set{this.cr_classcount = value;}
     }
+    public List<Fee> Fees {
+        get{return this.cr_fees;}
+        set{this.cr_fees = value;}
+    }
+    public List<Module> Modules {
+        get{return this.cr_modules;}
+        set{this.cr_modules = value;}
+    }
+
 
     public List<Course> getActiveCourses(){
         CourseData crsData = new CourseData();
