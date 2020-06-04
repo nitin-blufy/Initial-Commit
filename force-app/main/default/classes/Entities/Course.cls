@@ -13,6 +13,7 @@ public class Course  extends Entity{
     private Decimal cr_classcount;
     private List<Fee> cr_fees;
     private List<Module> cr_modules;
+    private List<CourseAssessment> cr_assessments;
     public Course() {
 
     }
@@ -80,10 +81,26 @@ public class Course  extends Entity{
         get{return this.cr_modules;}
         set{this.cr_modules = value;}
     }
-
-
+    public List<CourseAssessment> Assessments {
+        get{return this.cr_assessments;}
+        set{this.cr_assessments = value;}
+    }
     public List<Course> getActiveCourses(){
         CourseData crsData = new CourseData();
         return crsData.getActiveCourses();
+    }
+    public List<Course> getFees(){
+        CourseData crsData = new CourseData();
+        crsData.setCourse(this);
+        return crsData.getFees();
+    }
+    public List<Fee> getFeesById(String crId){
+        CourseData crsData = new CourseData();
+        return crsData.getFeesById(crId);
+    }
+    public List<Course> getAssessments(){
+        CourseData crsData = new CourseData();
+        crsData.setCourse(this);
+        return crsData.getAssessments();
     }
 }
