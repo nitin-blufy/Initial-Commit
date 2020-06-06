@@ -1,9 +1,13 @@
-public class Clas{
-    private String name;
-    private String id;	
-    public String ClassName {
-        get{return name;}
-        set{this.name = value;}
+public class Clas extends Entity{
+    public Clas(){
+
     }
-    // Nitin
+    public String Id {
+        get{return super.en_id;}
+        set{super.en_id = value;}
+    }
+    public String Name {
+        get{return super.en_name;}
+        set{super.en_name = value;}
+    }
 }
