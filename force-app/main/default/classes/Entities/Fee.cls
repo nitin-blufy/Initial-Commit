@@ -49,5 +49,9 @@ public class Fee extends Entity{
     public Decimal UnitPrice {
         get{return this.fe_unitprice;}
         set{this.fe_unitprice = value;}
-    }    
+    }
+    public Fee getFeesById(String feeId){
+        FeeData feeData = new FeeData();
+        return feeData.getFeesById(feeId);
+    }
 }

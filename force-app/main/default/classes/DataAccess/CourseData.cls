@@ -8,8 +8,9 @@ public class CourseData{
         isAccessible = true;
         this.cr_course = cr;
     }
-    public void setCourse(Course cr){
-        this.cr_course = cr;
+    public Course Course{
+        get{return this.cr_course;}
+        set{this.cr_course = value;}
     }
     
     public List<Course> getFees(){
@@ -17,7 +18,8 @@ public class CourseData{
         if (isAccessible){
             Course cr = new Course();
             for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
-                                      FROM Course_Fee__c WHERE Course__c =: this.cr_course.Id AND Fee__r.Amount__c != null AND Fee__r.Type__c != null])
+                                      FROM Course_Fee__c 
+                                      WHERE Course__c =: this.cr_course.Id AND Fee__r.Amount__c != null AND Fee__r.Type__c != null])
             {
                 Fee fe = new Fee();
                 fe.Id  = crFee.Fee__c;
@@ -41,7 +43,8 @@ public class CourseData{
         if (isAccessible){
             Course cr = new Course();
             for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
-                                      FROM Course_Fee__c WHERE Course__c =: crId AND Fee__r.Amount__c != null AND Fee__r.Type__c != null])
+                                      FROM Course_Fee__c 
+                                      WHERE Course__c =: crId AND Fee__r.Amount__c != null AND Fee__r.Type__c != null])
             {
                 Fee fe = new Fee();
                 fe.Id  = crFee.Fee__c;
@@ -63,7 +66,10 @@ public class CourseData{
     public List<Course> getActiveCourses(){
         List<Course> lsCourse = new List<Course>();   
         if (isAccessible){
-            for(educato__Course__c crs: [select Id, Name  from Course__c WHERE Status__c =: ConstantClass.activeStatus ORDER BY Name ]){
+            for(educato__Course__c crs: [select Id, Name  
+                                        From Course__c 
+                                        WHERE Status__c =: ConstantClass.activeStatus ORDER BY Name ])
+            {
                 Course cr = new Course();
                 cr.Id = crs.Id;
                 cr.Name = crs.Name; 
@@ -93,8 +99,12 @@ public class CourseData{
     public List<Course> getAssessments(){
         List<Course> lsCourse = new List<Course>();   
         if (isAccessible){
-            for(educato__Course__c crs: [select Id, Name  from Course__c WHERE Status__c =: ConstantClass.activeStatus ORDER BY Name ]){
+            for(educato__Course__c crs: [select Id, Name  
+                                        From Course__c 
+                                        WHERE Status__c =: ConstantClass.activeStatus ORDER BY Name ])
+            {
                 Course cr = new Course();
+                // Populate fields
             }
             return lsCourse;
         }
@@ -106,7 +116,10 @@ public class CourseData{
     public List<Course> getCourseById(String id){
         List<Course> lsCourse = new List<Course>();   
         if (isAccessible){
-            for(educato__Course__c crs: [select Id, Name  from Course__c WHERE Id =: id ORDER BY Name ]){
+            for(educato__Course__c crs: [select Id, Name  
+                                        From Course__c 
+                                        WHERE Id =: id ORDER BY Name ])
+            {
                 Course cr = new Course();
                 cr.Id = crs.Id;
                 cr.Name = crs.Name; 

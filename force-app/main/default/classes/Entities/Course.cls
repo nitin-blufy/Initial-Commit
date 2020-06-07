@@ -91,7 +91,7 @@ public class Course  extends Entity{
     }
     public List<Course> getFees(){
         CourseData crsData = new CourseData();
-        crsData.setCourse(this);
+        crsData.Course = this;
         return crsData.getFees();
     }
     public List<Fee> getFeesById(String crId){
@@ -100,7 +100,7 @@ public class Course  extends Entity{
     }
     public List<Course> getAssessments(){
         CourseData crsData = new CourseData();
-        crsData.setCourse(this);
+        crsData.Course = this;
         return crsData.getAssessments();
     }
 }
