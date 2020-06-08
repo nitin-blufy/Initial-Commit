@@ -2,7 +2,7 @@
 Name: NewEnrollmentFormCntrl
 Date: 30th Jan 2020
 Author: 
-Description: This controller is used create new enrollments
+Description: This controller is used create new enrollments 
 */
 public class NewEnrollmentFormCntrl {
     static Boolean isCourseAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Course__c',  
@@ -26,9 +26,7 @@ public class NewEnrollmentFormCntrl {
                                                                                         new Set<String>{'Id', 'Name', 'RecordTypeId', 'FirstName', 'LastName', 'PersonEmail','Phone','Block__c','Unit__c',
                                                                                             'BillingStreet','BillingPostalCode', 'BillingCountry', 'Gender__c', 'PersonBirthdate','Relationship_with_contact__c'},false);
     
-    static Boolean isBlufyConfigAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Blufy_Config__mdt',  
-                                                                                            new Set<String>{'Id','MasterLabel', 'Monthly_Invoice_Cycle__c', 'Overlap_Holiday_For_Monthly_Session__c', 'Terms_and_Conditions_Description__c',
-                                                                                                'Terms_and_Conditions_Title__c'},false);
+    static Boolean isBlufyConfigAccessible = FieldPremissionCrudUtility.checkReadPermission('educato__Blufy_Config__mdt',new Set<String>{'Id','Terms_and_Conditions_Description__c','Terms_and_Conditions_Title__c'},false);
     
     //Its used for fetch active course records
     @auraEnabled
@@ -673,16 +671,21 @@ return crsFeeWrap;
                                              WHERE Id =:slcdCrsObj.slcdClsWrapObj.clsId AND Days_of_Week__c != null AND Format__c != null];
                    
                    //Fetch selected tution fee for prorated amount
-                   List<Fee__c> feeList   = [SELECT Id, Name, Amount__c, Units__c, Unit_Price__c, Frequency__c, Schedule__c FROM Fee__c 
-                                             WHERE Id =:fw.feeId AND Amount__c > 0 AND  Unit_Price__c != null];  
+                  /* List<Fee__c> feeList   = [SELECT Id, Name, Amount__c, Units__c, Unit_Price__c, Frequency__c, Schedule__c FROM Fee__c 
+                                             WHERE Id =:fw.feeId AND Amount__c > 0 AND  Unit_Price__c != null];  */
                    
-                   if(clsList.size() > 0 && feeList.size() > 0){
+                   FeeData fd = new FeeData();
+                   Fee f	  = fd.getById(fw.feeId);
+                       
+                  // if(clsList.size() > 0 && feeList.size() > 0){
+                   if(clsList.size() > 0 && f != null){
                        Class__c cls          = clsList.get(0);                 
-                       Fee__c   fee          = feeList.get(0);
+                       //Fee__c   fee          = feeList.get(0);
                        Integer noOfLessInCurrMonth = 0;
                        
                        //Calculate prorated number of lesson for month type class on the bases of selected date
-                       if(fee.Frequency__c.equalsIgnoreCase(ConstantClass.monthlyFrequency)){
+                      // if(fee.Frequency__c.equalsIgnoreCase(ConstantClass.monthlyFrequency)){
+                      if(f.Frequency.equalsIgnoreCase(ConstantClass.monthlyFrequency)){
                            if(tempDt.month() == System.today().month()){
                                Integer numberOfDays = Date.daysInMonth(tempDt.year(), tempDt.month());
                                Date lastDayOfMonth = Date.newInstance(tempDt.year(), tempDt.month(), numberOfDays);
@@ -736,9 +739,13 @@ return crsFeeWrap;
                            }
                        }
                        System.debug('@@--->'+noOfLessInCurrMonth);
-                       Decimal packFee = fee.Unit_Price__c * noOfLessInCurrMonth;
+                       /*Decimal packFee = fee.Unit_Price__c * noOfLessInCurrMonth;
                        if(String.isNotBlank(fee.Schedule__c) && fee.Schedule__c.equalsIgnoreCase(ConstantClass.fixedType)){
                            packFee = fee.Amount__c;
+                       }*/
+                       Decimal packFee = f.UnitPrice * noOfLessInCurrMonth;
+                       if(String.isNotBlank(f.Schedule) && f.Schedule.equalsIgnoreCase(ConstantClass.fixedType)){
+                           packFee = f.Amount;
                        }
                        fw.feeProratedAmount = packFee;
                    }                           
