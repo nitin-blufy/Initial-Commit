@@ -253,7 +253,7 @@ fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
             List<Class__c> clsList = [SELECT Id, Name, Course__c, Start_Date__c, End_Date__c, Type__c, Frequency__c FROM Class__c
                                       WHERE Id =:cls.clsId];
             if(clsList.size() > 0){
-                for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c,Fee__r.Schedule__c, Fee__r.Units__c, 
+              /*  for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c,Fee__r.Schedule__c, Fee__r.Units__c, 
                                           Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
                                           FROM Course_Fee__c 
                                           WHERE Course__c =: clsList.get(0).Course__c AND Fee__r.Amount__c != null
@@ -271,7 +271,25 @@ fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
                                               fw.feeSchType  = crFee.Fee__r.Schedule__c;  
                                               fw.noOfUnit    = crFee.Fee__r.Units__c != null ? Integer.valueOf(crFee.Fee__r.Units__c):0;                                    
                                               tutionFeeWrapperList.add(fw);                        
-                                          }
+                                          }*/
+                CourseFeeData crsFeeData = new CourseFeeData();
+                List<CourseFee> crFeeLs  = crsFeeData.getByCourseIdOrType(clsList.get(0).Course__c, ConstantClass.tutionFeeType);
+                if(crFeeLs != null){
+                    for(CourseFee crFee: crFeeLs){
+                        FeeWrapper fw = new FeeWrapper();
+                        fw.feeId      = crFee.FeeId;
+                        fw.feeName    = crFee.Fee.Name;
+                        fw.feeType    = crFee.Fee.Type;
+                        fw.payFrequency = crFee.Fee.Frequency;  
+                        fw.feeAmount = crFee.Fee.Amount;
+                        fw.tutionFeeUnitPrice = crFee.Fee.UnitPrice;
+                        fw.isSelected = crFee.Fee.Required;
+                        fw.isOverride = crFee.Fee.Overrid;                                                   
+                        fw.feeSchType  = crFee.Fee.Schedule;  
+                        fw.noOfUnit    = crFee.Fee.Units != null ? Integer.valueOf(crFee.Fee.Units):0;                                    
+                        tutionFeeWrapperList.add(fw);
+                    }   
+                }
             }                            
         }
         return tutionFeeWrapperList;
