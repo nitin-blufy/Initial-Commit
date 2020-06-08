@@ -16,7 +16,6 @@ public class CourseFeeData{
                                                 Fee__r.Required__c, Fee__r.Override__c
                                       FROM Course_Fee__c 
                                       WHERE Course__c =: sId AND Fee__r.Amount__c != null AND Fee__r.Type__c != null]){
-                CourseFee cf = new CourseFee();
                 ls.add(fillCourseFee(crFee));
             }
             return ls;
@@ -37,7 +36,6 @@ public class CourseFeeData{
                                              Fee__r.Required__c, Fee__r.Override__c
                                       FROM Course_Fee__c 
                                       WHERE Course__c =: sId AND Fee__r.Amount__c != null AND Fee__r.Type__c =:type]){
-                CourseFee cf = new CourseFee();
                 ls.add(fillCourseFee(crFee));
             }
             return ls;
