@@ -48,17 +48,19 @@ public class CourseFeeData{
         cf.CourseId = crFee.Course__c;
         cf.FeeId = crFee.Fee__c;
 
-        Fee fe = new Fee();
-        fe.Id = crFee.Fee__c;
-        fe.Name = crFee.Fee__r.Name;
-        fe.Type  = crFee.Fee__r.Type__c;
+        Fee fe 		 = new Fee();
+        fe.Id 		 = crFee.Fee__c;
+        fe.Name		 = crFee.Fee__r.Name;
+        fe.Type  	 = crFee.Fee__r.Type__c;
         fe.Frequency = crFee.Fee__r.Frequency__c;  
-        fe.Amount = crFee.Fee__r.Amount__c;
+        fe.Amount 	 = crFee.Fee__r.Amount__c;
         fe.Schedule  = crFee.Fee__r.Schedule__c;  
-        fe.Units  = crFee.Fee__r.Units__c;   
+        fe.Units  	 = crFee.Fee__r.Units__c;   
         fe.UnitPrice = crFee.Fee__r.Unit_Price__c;
-       	fe.Overrid = crFee.Fee__r.Override__c;
-        cf.Fee = fe;        
+       	fe.Overrid 	 = crFee.Fee__r.Override__c;
+        fe.Required  = crFee.Fee__r.Required__c;
+        cf.Fee = fe;
+        
         return cf;
     }
 }

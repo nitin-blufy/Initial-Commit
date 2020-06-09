@@ -90,7 +90,7 @@ acc.BillingCountryCode = pickLstTempMap.get(acc.BillingCountryCode);*/
         List<DisWrapper>   disList  = new List<DisWrapper>();
         
         if(isCourseFeeAccessible && isClassAccessible && isCourseDiscAccessible){
-            for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
+            /*for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
                                       FROM Course_Fee__c WHERE Course__c =: crId AND Fee__r.Amount__c != null AND Fee__r.Type__c != null]){
                                           
                                           FeeWrapper fw = new FeeWrapper();
@@ -101,40 +101,59 @@ acc.BillingCountryCode = pickLstTempMap.get(acc.BillingCountryCode);*/
                                           fw.feeAmount   = crFee.Fee__r.Amount__c;
                                           fw.feeSchType  = crFee.Fee__r.Schedule__c;  
                                           fw.noOfUnit    = crFee.Fee__r.Units__c != null ? Integer.valueOf(crFee.Fee__r.Units__c):0;   
-                                          
-                                          /*if(crFee.Fee__r.Type__c == ConstantClass.tutionFeeType){
-fw.tutionFeeUnitPrice = crFee.Fee__r.Unit_Price__c;
-crsFeeWrap.tutionFeeWrapperList.add(fw);
-}else*/ if(crFee.Fee__r.Type__c == ConstantClass.depositFeeType){
-    fw.isSelected = crFee.Fee__r.Required__c;
-    fw.isOverride = crFee.Fee__r.Override__c;
-    crsFeeWrap.depositWrapperList.add(fw);
-    if(fw.isSelected){
-        crsFeeWrap.totFee += fw.feeAmount; 
-        crsFeeWrap.totWithProratedFee += fw.feeAmount;
-    }
-}else if(crFee.Fee__r.Type__c != ConstantClass.tutionFeeType){
-    fw.isSelected = crFee.Fee__r.Required__c;
-    fw.isOverride = crFee.Fee__r.Override__c;
-    crsFeeWrap.feeWrapperList.add(fw);
-    if(fw.isSelected){
-        crsFeeWrap.totFee += fw.feeAmount; 
-        crsFeeWrap.totWithProratedFee += fw.feeAmount;
-    }
-}                      
-                                      }
+                 if(crFee.Fee__r.Type__c == ConstantClass.depositFeeType){
+                    fw.isSelected = crFee.Fee__r.Required__c;
+                    fw.isOverride = crFee.Fee__r.Override__c;
+                    crsFeeWrap.depositWrapperList.add(fw);
+                    if(fw.isSelected){
+                        crsFeeWrap.totFee += fw.feeAmount; 
+                        crsFeeWrap.totWithProratedFee += fw.feeAmount;
+                    }
+                }else if(crFee.Fee__r.Type__c != ConstantClass.tutionFeeType){
+                    fw.isSelected = crFee.Fee__r.Required__c;
+                    fw.isOverride = crFee.Fee__r.Override__c;
+                    crsFeeWrap.feeWrapperList.add(fw);
+                    if(fw.isSelected){
+                        crsFeeWrap.totFee += fw.feeAmount; 
+                        crsFeeWrap.totWithProratedFee += fw.feeAmount;
+                    }
+                }                      
+            }*/
+            CourseFeeData crsFeeData = new CourseFeeData();
+            List<CourseFee> crFeeLs  = crsFeeData.getByCourseId(crId);
+            if(crFeeLs != null){
+                for(CourseFee crFee: crFeeLs){
+                    FeeWrapper fw = new FeeWrapper();
+                    fw.feeId      = crFee.FeeId;
+                    fw.feeName    = crFee.Fee.Name;
+                    fw.feeType    = crFee.Fee.Type;
+                    fw.payFrequency = crFee.Fee.Frequency;  
+                    fw.feeAmount   = crFee.Fee.Amount;
+                    fw.feeSchType  = crFee.Fee.Schedule;  
+                    fw.noOfUnit    = crFee.Fee.Units != null ? Integer.valueOf(crFee.Fee.Units):0;
+
+                    if(crFee.Fee.Type == ConstantClass.depositFeeType){
+                        fw.isSelected = crFee.Fee.Required;
+                        fw.isOverride = crFee.Fee.Overrid;
+                        crsFeeWrap.depositWrapperList.add(fw);
+                        if(fw.isSelected){
+                            crsFeeWrap.totFee += fw.feeAmount; 
+                            crsFeeWrap.totWithProratedFee += fw.feeAmount;
+                        }
+                    }else if(crFee.Fee.Type != ConstantClass.tutionFeeType){
+                        fw.isSelected = crFee.Fee.Required;
+                        fw.isOverride = crFee.Fee.Overrid;
+                        crsFeeWrap.feeWrapperList.add(fw);
+                        if(fw.isSelected){
+                            crsFeeWrap.totFee += fw.feeAmount; 
+                            crsFeeWrap.totWithProratedFee += fw.feeAmount;
+                        }
+                    } 
+                }
+            }
             
             
             Integer counter = 0;
-            /* for(Class__c cls:[SELECT Id, Name, Start_Date__c, End_Date__c, Start_Time__c, End_Time__c, Location__c, Location__r.Name, 
-Teacher__r.Name, Type__c, Status__c, Capacity__c, Days_of_Week__c, Seats_Available__c, Frequency__c,
-(SELECT Id, Name, Start_Date__c, End_Date__c,Term__r.Start_Date__c, Term__r.End_Date__c, Sessions__c, Status__c FROM  Class_Terms__r
-WHERE Status__c =:ConstantClass.ScheduledStatus AND Allow_Enrollment__c = True AND
-Sessions__c > 0 AND  Term__r.Start_Date__c != null AND  Term__r.End_Date__c != null ORDER BY Sequence__c)
-FROM Class__c 
-Teacher__r.Name, Type__c, Status__c, Capacity__c, Days_of_Week__c, Seats_Available__c,
-WHERE Course__c =:crId AND Type__c != null AND Frequency__c != null AND (Status__c =: ConstantClass.clsOpenStatus OR (Allow_Overbooking__c = True AND Status__c =: ConstantClass.clsClosedStatus))]){
-*/
             for(Class__c cls:[SELECT Id, Name, Start_Date__c, End_Date__c, Start_Time__c, End_Time__c, Location__c, Location__r.Name, 
                               Teacher__r.Name, Type__c, Frequency__c, Status__c, Capacity__c, Days_of_Week__c, Seats_Available__c,
                               (SELECT Id, Name, Start_Date__c, End_Date__c,Sessions__c, Status__c FROM  Class_Terms__r
@@ -239,14 +258,14 @@ WHERE Course__c =:crId AND Type__c != null AND Frequency__c != null AND (Status_
     //This function is used to get class term amount on the bases of class term session and selected course unit price
     @auraEnabled
     public static List<FeeWrapper> fetchClsTermSessionAmount(String clsStr, String tutionFeeWrapperListStr){
-        /* List<Class_Term__c> clsTermList = [SELECT Id, Name, Sessions__c FROM Class_Term__c WHERE Id=: cls.clsTermId];
-if(clsTermList.size() > 0){
-for(FeeWrapper fw : tutionFeeWrapperList){
-if(fw.payFrequency == ConstantClass.termFrequency){
-fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
-}
-}
-}*/
+      /* List<Class_Term__c> clsTermList = [SELECT Id, Name, Sessions__c FROM Class_Term__c WHERE Id=: cls.clsTermId];
+        if(clsTermList.size() > 0){
+            for(FeeWrapper fw : tutionFeeWrapperList){
+                if(fw.payFrequency == ConstantClass.termFrequency){
+                    fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
+                }
+            }
+        }*/
         ClassWrapper cls = (ClassWrapper) System.JSON.deserialize(clsStr, ClassWrapper.class);
         List<FeeWrapper> tutionFeeWrapperList = String.isNotBlank(tutionFeeWrapperListStr) ? (List<FeeWrapper>) JSON.deserialize(tutionFeeWrapperListStr,List<FeeWrapper>.class) : new List<FeeWrapper>(); 
         
@@ -255,7 +274,7 @@ fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
             List<Class__c> clsList = [SELECT Id, Name, Course__c, Start_Date__c, End_Date__c, Type__c, Frequency__c FROM Class__c
                                       WHERE Id =:cls.clsId];
             if(clsList.size() > 0){
-                for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c,Fee__r.Schedule__c, Fee__r.Units__c, 
+             /*   for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c,Fee__r.Schedule__c, Fee__r.Units__c, 
                                           Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c, Fee__r.Override__c
                                           FROM Course_Fee__c 
                                           WHERE Course__c =: clsList.get(0).Course__c AND Fee__r.Amount__c != null
@@ -273,7 +292,25 @@ fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
                                               fw.feeSchType  = crFee.Fee__r.Schedule__c;  
                                               fw.noOfUnit    = crFee.Fee__r.Units__c != null ? Integer.valueOf(crFee.Fee__r.Units__c):0;                                    
                                               tutionFeeWrapperList.add(fw);                        
-                                          }
+                                          }*/
+                CourseFeeData crsFeeData = new CourseFeeData();
+                List<CourseFee> crFeeLs  = crsFeeData.getByCourseIdOrType(clsList.get(0).Course__c, ConstantClass.tutionFeeType);
+                if(crFeeLs != null){
+                    for(CourseFee crFee: crFeeLs){
+                        FeeWrapper fw = new FeeWrapper();
+                        fw.feeId      = crFee.FeeId;
+                        fw.feeName    = crFee.Fee.Name;
+                        fw.feeType    = crFee.Fee.Type;
+                        fw.payFrequency = crFee.Fee.Frequency;  
+                        fw.feeAmount = crFee.Fee.Amount;
+                        fw.tutionFeeUnitPrice = crFee.Fee.UnitPrice;
+                        fw.isSelected = crFee.Fee.Required;
+                        fw.isOverride = crFee.Fee.Overrid;                                                   
+                        fw.feeSchType  = crFee.Fee.Schedule;  
+                        fw.noOfUnit    = crFee.Fee.Units != null ? Integer.valueOf(crFee.Fee.Units):0;                                    
+                        tutionFeeWrapperList.add(fw);  
+                    }
+                }
             }                            
         }
         return tutionFeeWrapperList;
@@ -308,33 +345,62 @@ fw.feeAmount = fw.tutionFeeUnitPrice*clsTermList.get(0).Sessions__c;
                 if(clsList.size() > 0){
                     String   crId= clsList.get(0).Course__c;
                     
-                    for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c,Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c,Fee__r.Override__c
+                    /*for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Fee__r.Schedule__c,Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, Fee__r.Required__c,Fee__r.Override__c
                                               FROM Course_Fee__c WHERE Course__c =:crId AND Fee__r.Amount__c != null AND Fee__r.Type__c != null]){
                                                   
-                                                  FeeWrapper fw = new FeeWrapper();
-                                                  fw.feeId      = crFee.Fee__c;                         
-                                                  fw.feeName    = crFee.Fee__r.Name;
-                                                  fw.feeType    = crFee.Fee__r.Type__c;
-                                                  fw.payFrequency = crFee.Fee__r.Frequency__c;  
-                                                  fw.feeAmount = crFee.Fee__r.Amount__c;
-                                                  fw.isSelected = crFee.Fee__r.Required__c;
-                                                  fw.isOverride = crFee.Fee__r.Override__c;
-                                                  //  fw.tutionFeeUnitPrice = crFee.Fee__r.Unit_Price__c;
-                                                  fw.feeSchType  = crFee.Fee__r.Schedule__c;  
-                                                  fw.noOfUnit    = crFee.Fee__r.Units__c != null ? Integer.valueOf(crFee.Fee__r.Units__c):0;   
-                                                  
-                                                  if(crFee.Fee__r.Type__c == ConstantClass.tutionFeeType){
-                                                      if(!slcdFee.contains(crFee.Fee__c) &&  crFee.Fee__r.Frequency__c==clsList.get(0).Frequency__c)
-                                                          crsFeeWrap.tutionFeeWrapperList.add(fw);
-                                                  }else if(crFee.Fee__r.Type__c == ConstantClass.depositFeeType){                       
-                                                      if(!slcdFee.contains(crFee.Fee__c))
-                                                          crsFeeWrap.depositWrapperList.add(fw);
-                                                  }else{
-                                                      if(!slcdFee.contains(crFee.Fee__c))
-                                                          crsFeeWrap.feeWrapperList.add(fw);
-                                                  }   
-                                              }
-                    
+                        FeeWrapper fw = new FeeWrapper();
+                        fw.feeId      = crFee.Fee__c;                         
+                        fw.feeName    = crFee.Fee__r.Name;
+                        fw.feeType    = crFee.Fee__r.Type__c;
+                        fw.payFrequency = crFee.Fee__r.Frequency__c;  
+                        fw.feeAmount = crFee.Fee__r.Amount__c;
+                        fw.isSelected = crFee.Fee__r.Required__c;
+                        fw.isOverride = crFee.Fee__r.Override__c;
+                        //  fw.tutionFeeUnitPrice = crFee.Fee__r.Unit_Price__c;
+                        fw.feeSchType  = crFee.Fee__r.Schedule__c;  
+                        fw.noOfUnit    = crFee.Fee__r.Units__c != null ? Integer.valueOf(crFee.Fee__r.Units__c):0;   
+                        
+                        if(crFee.Fee__r.Type__c == ConstantClass.tutionFeeType){
+                            if(!slcdFee.contains(crFee.Fee__c) &&  crFee.Fee__r.Frequency__c==clsList.get(0).Frequency__c)
+                                crsFeeWrap.tutionFeeWrapperList.add(fw);
+                        }else if(crFee.Fee__r.Type__c == ConstantClass.depositFeeType){                       
+                            if(!slcdFee.contains(crFee.Fee__c))
+                                crsFeeWrap.depositWrapperList.add(fw);
+                        }else{
+                            if(!slcdFee.contains(crFee.Fee__c))
+                                crsFeeWrap.feeWrapperList.add(fw);
+                        }   
+                    }*/
+                    CourseFeeData crsFeeData = new CourseFeeData();
+                    List<CourseFee> crFeeLs  = crsFeeData.getByCourseId(crId);
+                    if(crFeeLs != null){
+                        for(CourseFee crFee: crFeeLs){
+                            FeeWrapper fw = new FeeWrapper();
+                            fw.feeId      = crFee.FeeId;                         
+                            fw.feeName    = crFee.Fee.Name;
+                            fw.feeType    = crFee.Fee.Type;
+                            fw.payFrequency = crFee.Fee.Frequency;  
+                            fw.feeAmount  = crFee.Fee.Amount;
+                            fw.isSelected = crFee.Fee.Required;
+                            fw.isOverride = crFee.Fee.Overrid;
+                            //  fw.tutionFeeUnitPrice = crFee.Fee__r.Unit_Price__c;
+                            fw.feeSchType = crFee.Fee.Schedule;  
+                            fw.noOfUnit   = crFee.Fee.Units != null ? Integer.valueOf(crFee.Fee.Units):0;   
+                            
+                            if(crFee.Fee.Type == ConstantClass.tutionFeeType){
+                                if(!slcdFee.contains(crFee.Fee.Type) &&  crFee.Fee.Frequency==clsList.get(0).Frequency__c)
+                                    crsFeeWrap.tutionFeeWrapperList.add(fw);
+                            }else if(crFee.Fee.Type == ConstantClass.depositFeeType){                       
+                                if(!slcdFee.contains(crFee.Fee.Type))
+                                    crsFeeWrap.depositWrapperList.add(fw);
+                            }else{
+                                if(!slcdFee.contains(crFee.Fee.Type))
+                                    crsFeeWrap.feeWrapperList.add(fw);
+                            }   
+                        }
+                    }
+
+
                     Integer counter = 0;      
                     for(Class__c cls:[SELECT Id, Name, Start_Date__c, End_Date__c, Start_Time__c, End_Time__c, Location__c, Location__r.Name, 
                                       Teacher__r.Name, Type__c, Frequency__c, Status__c, Capacity__c, Days_of_Week__c, Seats_Available__c,
@@ -1033,7 +1099,7 @@ WHERE Id IN: clsSessonMap.keySet()]);*/
                         
                         //System.debug('@@@@nextSchDt  '+slcdClsWrap.clsType);
                         //Insert subscription line items
-                        if(slcdClsWrap.clsType.equalsIgnoreCase(ConstantClass.ongoingClsType) && crsWrap.tutionFeeWrapperList.size() > 0){
+                        if(slcdClsWrap.clsType.equalsIgnoreCase(ConstantClass.ongoingClsType) && crsWrap.tutionFeeWrapperList.size() > 0 && !(slcdTutionFee.payFrequency.equalsIgnoreCase(ConstantClass.oneTimeFrequency))){
                             //FeeWrapper slcdTutionFee = crsWrap.tutionFeeWrapperList.get(0);
                             Subscription__c subs = new Subscription__c();
                             
@@ -1165,7 +1231,7 @@ subsList.add(subs);
                                 subsLnItem.Next_Bill_Date__c = subsNextBillingDate;
                             }
                             subLnList.add(subsLnItem);    
-                        }else if(slcdClsWrap.clsType.equalsIgnoreCase(ConstantClass.fixedType)){
+                        }else if(slcdClsWrap.clsType.equalsIgnoreCase(ConstantClass.fixedType) || slcdTutionFee.payFrequency.equalsIgnoreCase(ConstantClass.oneTimeFrequency)){
                             //Filling student session records for fixed course
                             if(clsSessonMap.get(slcdClsWrap.slctClsTermId) != null){
                                 for(Session__c sess : clsSessonMap.get(slcdClsWrap.slctClsTermId)){
