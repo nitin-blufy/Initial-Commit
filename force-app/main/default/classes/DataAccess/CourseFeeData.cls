@@ -9,7 +9,7 @@ public class CourseFeeData{
     public List<CourseFee> getByCourseId(String sId){
         List<CourseFee> ls = new List<CourseFee>();
         if (isAccessible){
-            for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, 
+            for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Course__c,
                                                 Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, 
                                                 Fee__r.Required__c, Fee__r.Override__c
                                       FROM Course_Fee__c 
@@ -27,7 +27,7 @@ public class CourseFeeData{
         List<CourseFee> ls = new List<CourseFee>();
         if (isAccessible){
             Course cr = new Course();          
-            for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, 
+            for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Course__c,
                                              Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, 
                                              Fee__r.Required__c, Fee__r.Override__c
                                       FROM Course_Fee__c 
@@ -57,8 +57,9 @@ public class CourseFeeData{
         fe.Schedule  = crFee.Fee__r.Schedule__c;  
         fe.Units  = crFee.Fee__r.Units__c;   
         fe.UnitPrice = crFee.Fee__r.Unit_Price__c;
+       	fe.Overrid = crFee.Fee__r.Override__c;
         cf.Fee = fe;
-
+        
         return cf;
     }
 }
