@@ -1,7 +1,7 @@
 /**
 *Name		: StudentSessionTriggerTest
 *Date		: 20 April 2020
-*Description :
+*Description : test class
 *
 **/
 @isTest
