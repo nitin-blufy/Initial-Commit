@@ -58,8 +58,7 @@ public class CourseFeeData{
         fe.Units  = crFee.Fee__r.Units__c;   
         fe.UnitPrice = crFee.Fee__r.Unit_Price__c;
        	fe.Overrid = crFee.Fee__r.Override__c;
-        cf.Fee = fe;
-        
+        cf.Fee = fe;        
         return cf;
     }
 }
