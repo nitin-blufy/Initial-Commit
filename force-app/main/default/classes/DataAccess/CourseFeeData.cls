@@ -6,9 +6,9 @@ public class CourseFeeData{
         isAccessible = true;
     }
 
-    public List<CourseFee> getByCourseId(String sId){
-        List<CourseFee> ls = new List<CourseFee>();
+    public List<CourseFee> getByCourseId(String sId){        
         if (isAccessible){
+            List<CourseFee> ls = new List<CourseFee>();
             for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Course__c,
                                                 Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, 
                                                 Fee__r.Required__c, Fee__r.Override__c
@@ -23,10 +23,9 @@ public class CourseFeeData{
         }        
     }
 
-    public List<CourseFee> getByCourseIdOrType(String sId, String type){
-        List<CourseFee> ls = new List<CourseFee>();
+    public List<CourseFee> getByCourseIdOrType(String sId, String type){        
         if (isAccessible){
-            Course cr = new Course();          
+            List<CourseFee> ls = new List<CourseFee>();        
             for(Course_Fee__c crFee: [SELECT Id, Name, Fee__c, Fee__r.Name, Fee__r.Amount__c, Fee__r.Unit_Price__c, Course__c,
                                              Fee__r.Schedule__c, Fee__r.Units__c, Fee__r.Type__c, Fee__r.Frequency__c, 
                                              Fee__r.Required__c, Fee__r.Override__c
