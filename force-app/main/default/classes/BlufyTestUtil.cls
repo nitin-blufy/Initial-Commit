@@ -1,7 +1,7 @@
 /**
 Name        : BlufyTestUtil
 Date        : 23 March 2020
-Description : This class is use as a Utility class for creating test data for other test classes.
+Description : This class is use as a Utility class for creating test data for other test class.
 
 */
 @isTest
